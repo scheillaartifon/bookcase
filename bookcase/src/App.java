@@ -1,85 +1,89 @@
-class Node {
+import java.util.LinkedList;
+import java.util.Scanner;
+
+class Book {
     int id;
-    int year;
     String title;
     String author;
-    Node next;
+    int year;
 
-    public Node(int id, String title, String author, int year) {
+    Book(int id, String title, String author, int year) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.year = year;
-        this.next = null;
+    }
+
+    @Override
+    public String toString() {
+        return id + " - " + title + " - " + author + " - " + year + "\n";
     }
 }
 
-class LinkedList {
-    Node head;
+// Emprestar livro (Usando lista)
+class LendBook {
+    private LinkedList<Integer> lista = new LinkedList<Integer>();
 
-    public void add(int id, String title, String author, int year) {
-        Node newNode = new Node(id, title, author, year);
-
-        if (head == null) {
-            head = newNode;
-            return;
-        }
-
-        Node current = head;
-
-        while (current.next != null) {
-            current = current.next;
-        }
-
-        current.next = newNode;
+    // Adiciona elemento na fila
+    public void reservation(int valor) { // Fila de reserva de um livro
+        lista.addLast(valor);
+        System.out.print(valor + " ");
     }
 
-    public void delete(int id) {
-        if (head == null)
-            return;
-
-        if (head.id == id) {
-            head = head.next;
+    public int devolution() { // Devolucao da reserva
+        if (!estaVazia()) {
+            return lista.removeFirst(); // Remove do início da lista
+        } else {
+            System.out.println("Fila vazia!");
+            return -1; // Indicando erro
         }
-
-        Node current = head;
-        while (current.next != null && current.next.id != id) {
-            current = current.next;
-        }
-
-        if (current.next == null)
-            return;
-
-        current.next = current.next.next;
     }
 
-    public void printList() {
-        Node current = head;
-
-        while (current != null) {
-            System.out.print(current.title + " -> ");
-            current = current.next;
-        }
-
-        System.out.println("null \n");
+    // Verifica se a fila está vazia
+    public boolean estaVazia() {
+        return lista.isEmpty();
     }
 }
 
 public class App {
     public static void main(String[] args) throws Exception {
-        LinkedList bookList = new LinkedList();
+        LinkedList<Object> bookList = new LinkedList<Object>();
 
-        bookList.add(1, "Corte de Espinhos e Rosas", "Sarah J. Maas", 2015);
-        bookList.add(2, "Casa de Terra e Sangue", "Sarah J. Maas", 2020);
-        bookList.add(3, "Trono de Vidro", "Sarah J. Maas", 2012);
-        bookList.add(4, "O Príncipe Cruel", "Holly Black", 2018);
-        bookList.add(5, "Divinos Rivais", "Rebecca Ross", 2023);
+        Book book1 = new Book(1, "Corte de Espinhos e Rosas", "Sarah J. Maas", 2015);
+        Book book2 = new Book(2, "Casa de Terra e Sangue", "Sarah J. Maas", 2020);
+        Book book3 = new Book(3, "Trono de Vidro", "Sarah J. Maas", 2012);
+        Book book4 = new Book(4, "O Príncipe Cruel", "Holly Black", 2018);
+        Book book5 = new Book(5, "Divinos Rivais", "Rebecca Ross", 2023);
 
-        System.out.println("Lista encadeada de livros:");
-        bookList.printList();
+        bookList.add(book1);
+        bookList.add(book2);
+        bookList.add(book3);
+        bookList.add(book4);
+        bookList.add(book5);
 
-        bookList.delete(3);
-        System.out.println("Lista após remover o livro Trono de Vidro (id 3):");
-        bookList.printList();
+        System.out.println("\nLista de livros cadastrados");
+        System.out.println(bookList);
+
+        bookList.remove(book1);
+        System.out.println("\nRemovido primeiro livro da estante (Corte de Espinhos e)");
+
+        System.out.println("Lista atualizada de livros cadastrados");
+        System.out.println(bookList);
+
+        System.out.println("\nAdicionado usuários para fila de espera do livro");
+        LendBook reservationQueue = new LendBook();
+        reservationQueue.reservation(3);
+        reservationQueue.reservation(1);
+        reservationQueue.reservation(2);
+        reservationQueue.reservation(4);
+        reservationQueue.reservation(5);
+
+        System.out.println("\n\nLivro devolvido...");
+        while (!reservationQueue.estaVazia()) {
+            System.out.println(
+                    "Usuário " + reservationQueue.devolution() + " era o próximo da fila para reservar livro");
+            System.out.println("Usuário não quis reservar o livro. Próximo...");
+        }
+
     }
 }
