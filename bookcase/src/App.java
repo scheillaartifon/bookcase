@@ -1,5 +1,7 @@
 import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
 
 class Book {
     int id;
@@ -20,34 +22,11 @@ class Book {
     }
 }
 
-// Emprestar livro (Usando lista)
-class LendBook {
-    private LinkedList<Integer> lista = new LinkedList<Integer>();
-
-    // Adiciona elemento na fila
-    public void reservation(int valor) { // Fila de reserva de um livro
-        lista.addLast(valor);
-        System.out.print(valor + " ");
-    }
-
-    public int devolution() { // Devolucao da reserva
-        if (!estaVazia()) {
-            return lista.removeFirst(); // Remove do início da lista
-        } else {
-            System.out.println("Fila vazia!");
-            return -1; // Indicando erro
-        }
-    }
-
-    // Verifica se a fila está vazia
-    public boolean estaVazia() {
-        return lista.isEmpty();
-    }
-}
-
 public class App {
     public static void main(String[] args) throws Exception {
         LinkedList<Object> bookList = new LinkedList<Object>();
+        Queue<String> reservationQueue = new PriorityQueue<>();
+        Stack<Integer> lastBooksVisited = new Stack<>();
 
         Book book1 = new Book(1, "Corte de Espinhos e Rosas", "Sarah J. Maas", 2015);
         Book book2 = new Book(2, "Casa de Terra e Sangue", "Sarah J. Maas", 2020);
@@ -62,28 +41,40 @@ public class App {
         bookList.add(book5);
 
         System.out.println("\nLista de livros cadastrados");
-        System.out.println(bookList);
+        for (int i = 0; i < bookList.size(); i++) {
+            System.out.print(bookList.get(i));
+        }
 
         bookList.remove(book1);
-        System.out.println("\nRemovido primeiro livro da estante (Corte de Espinhos e)");
+        System.out.println(
+                "\nRemovido primeiro livro da estante (Corte de Espinhos e Rosas). Agora a lista atualizada ficou:");
+        for (int i = 0; i < bookList.size(); i++) {
+            System.out.print(bookList.get(i));
+        }
 
-        System.out.println("Lista atualizada de livros cadastrados");
-        System.out.println(bookList);
+        System.out.println("\nAdicionado usuário na fila de espera para pegar o livro 1");
+        reservationQueue.add("Ana");
+        reservationQueue.add("Marcos");
+        reservationQueue.add("Fabricio");
+        reservationQueue.add("Morgana");
+        reservationQueue.add("Sara");
 
-        System.out.println("\nAdicionado usuários para fila de espera do livro");
-        LendBook reservationQueue = new LendBook();
-        reservationQueue.reservation(3);
-        reservationQueue.reservation(1);
-        reservationQueue.reservation(2);
-        reservationQueue.reservation(4);
-        reservationQueue.reservation(5);
-
-        System.out.println("\n\nLivro devolvido...");
-        while (!reservationQueue.estaVazia()) {
+        System.out.println("Livro devolvido...");
+        while (!reservationQueue.isEmpty()) {
             System.out.println(
-                    "Usuário " + reservationQueue.devolution() + " era o próximo da fila para reservar livro");
+                    "Usuário " + reservationQueue.remove() + " era o próximo da fila para reservar livro");
             System.out.println("Usuário não quis reservar o livro. Próximo...");
         }
 
+        System.out.println("\nÚltimos livros visitados");
+        lastBooksVisited.add(1);
+        lastBooksVisited.add(3);
+        lastBooksVisited.add(5);
+        lastBooksVisited.add(2);
+        lastBooksVisited.add(4);
+
+        while (!lastBooksVisited.isEmpty()) {
+            System.out.println("Excluido livro " + lastBooksVisited.pop() + " que foi o último visitado");
+        }
     }
 }
